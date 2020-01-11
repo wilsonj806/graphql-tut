@@ -4,13 +4,15 @@
   "description": "Simple graphQL server",
   "main": "server.js",
   "scripts": {
-    "test": "echo 'testing'"
+    "test": "echo 'testing'",
+    "dev:server": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
+    "graphql": "^14.5.8",
     "nodemon": "^2.0.2"
   }
 }
