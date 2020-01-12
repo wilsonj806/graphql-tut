@@ -8,12 +8,15 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
+const axios = require('axios');
+const customersJsonEnd = 'http://localhost:3000/customers/'
+
 // ----- NOTE Hardcoded customers
-const customers = [
-  { id: '1', name: 'John Doe', email: 'jdoe123@gmail.com', age: 34 },
-  { id: '2', name: 'Steven Smith', email: 'ssmith123@gmail.com', age: 23 },
-  { id: '3', name: 'Sarah Williams', email: 'swilliams123@gmail.com', age: 27 },
-]
+// const customers = [
+//   { id: '1', name: 'John Doe', email: 'jdoe123@gmail.com', age: 34 },
+//   { id: '2', name: 'Steven Smith', email: 'ssmith123@gmail.com', age: 23 },
+//   { id: '3', name: 'Sarah Williams', email: 'swilliams123@gmail.com', age: 27 },
+// ]
 
 /**
  * All GraphQLObjectTypes need a name property
@@ -33,11 +36,11 @@ const CustomerType = new GraphQLObjectType({
   })
 });
 
-const tempSearch = (arrToQuery, args) => {
-  for (let i = 0; i < arrToQuery.length; i++) {
-    if (arrToQuery[i].id === args.id) return arrToQuery[i]
-  }
-}
+// const tempSearch = (arrToQuery, args) => {
+//   for (let i = 0; i < arrToQuery.length; i++) {
+//     if (arrToQuery[i].id === args.id) return arrToQuery[i]
+//   }
+// }
 // ----- NOTE Root Query
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -54,7 +57,8 @@ const RootQuery = new GraphQLObjectType({
       },
       resolve(parentValue, args) {
         // Temporary since hardcoded
-        return tempSearch(customers, args);
+        return axios.get(customersJsonEnd + args.id)
+          .then(res => res.data);
       },
     },
     // QUERY query for all customers
@@ -62,7 +66,8 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(CustomerType),
       resolve(parentValue, args) {
         // return HARD CODED customers
-        return customers
+        return axios.get(customersJsonEnd)
+        .then(res => res.data);
       }
     }
   }),

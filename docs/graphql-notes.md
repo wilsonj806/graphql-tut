@@ -1,6 +1,6 @@
 # GraphQL Notes
 ## Setting up
-So before we use GraphQL, we need to do some setup. Setting up the Express server is very straightforwards.
+So before we use GraphQL, we need to do some setup. Setting up the Express server is very straightforwards and to access the GraphIQL, we're defining a `/graphql` route.
 
 Setting up the schema is also fairly straight-forwards, it's similar to setting up a Mongoose model, but with some differences.
 
@@ -26,3 +26,21 @@ And our `RootQuery` looks like:
     })
   })
 ```
+
+We'll also need a CustomerType and that looks like a User document in Mongoose:
+
+```js
+const CustomerType = new GraphQLObjectType({
+  name: 'CustomerType',
+
+  // Fields returns an object with your schema
+  fields: () => ({
+    id : { type: GraphQLString },
+    name: { type: GraphQLString },
+    email: { type: GraphQLString },
+    age: { type: GraphQLInt },
+  })
+});
+```
+
+## Making Queries
