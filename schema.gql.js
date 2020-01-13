@@ -71,10 +71,52 @@ const RootQuery = new GraphQLObjectType({
       }
     }
   }),
-
 });
+
+// ----- NOTE GraphQL Mutation
+const mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addCustomer: {
+      type: CustomerType,
+      args: {
+        // GraphQLNonNull is for required types
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        age: { type: new GraphQLNonNull(GraphQLInt) },
+      },
+      resolve(parentValue, args) {
+        return axios.post(customersJsonEnd, args)
+          .then(res => res.data);
+      }
+    },
+    deleteCustomer: {
+      type: CustomerType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      resolve(parentValue, args) {
+        return axios.delete(customersJsonEnd + args.id)
+      }
+    },
+    updateCustomer: {
+      type: CustomerType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        name: { type: GraphQLString },
+        email: { type: GraphQLString },
+        age: { type: GraphQLInt },
+      },
+      resolve(parentValue, args) {
+        // pass entire args param since it's an object
+        return axios.patch(customersJsonEnd + args.id, args).then(res => res.data);
+      }
+    }
+  }
+})
 
 // Will need a root query/ baseline query that every other query depends on.
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation
 })
